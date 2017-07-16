@@ -1,0 +1,50 @@
+---
+
+- name: copy {{ app_name }} jar to user deploy folder
+  become: true
+  copy: src="{{ item }}" dest=/home/{{ user }}/deploy/ mode=0744 owner={{ user }} group={{ user }}
+  with_fileglob:
+    - "{{ jenkins_workspace }}/build/libs/{{ app_name }}-0.0.1-SNAPSHOT.jar"
+
+- name: create symlink
+  become: true
+  file:
+    src: /home/{{ user }}/deploy/{{ app_name }}-0.0.1-SNAPSHOT.jar
+    dest: /etc/init.d/{{ app_name }}
+    state: link
+    force: yes
+    mode: 0755
+
+- name: create pid directory
+  become: true
+  file:
+    path: /var/run/{{ app_name }}
+    state: directory
+    mode: 0755
+    owner: "{{ user}}"
+    group: root
+
+- name: create pid file
+  become: true
+  file:
+    path: /var/run/{{ app_name }}/{{ app_name }}.pid
+    state: touch
+    mode: 0644
+    owner: "{{ user}}"
+    group: root
+
+- name: create log file
+  become: true
+  file:
+    path: /var/log/{{ app_name}}.log
+    mode: 0755
+    state: touch
+    owner: "{{ user}}"
+    group: root
+
+- name: restart {{ app_name }}
+  become: true
+  service:
+    name: "{{ app_name }}"
+    state: restarted
+    enabled: yes
