@@ -1,0 +1,8 @@
+---
+
+- name: set app config
+  become: true
+  template:
+    src: app.conf.j2
+    dest: /home/{{ user }}/deploy/{{ app_name }}-0.0.1-SNAPSHOT.conf
+  when: (app_config is defined)
