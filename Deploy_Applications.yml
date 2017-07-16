@@ -4,5 +4,5 @@
   hosts:
     - "{{ host_name }}"
   roles:
-    - set_app_configuration
+    - set_app_config
     - deploy_app
