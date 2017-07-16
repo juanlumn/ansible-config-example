@@ -1,0 +1,16 @@
+[all_hosts:children]
+Jenkins_server
+App_Server
+
+[Jenkins_server]
+#IP or host name of your Jenkins server
+
+[App_Server:children]
+Config-Server
+Eureka-Server
+
+[Config-Server]
+#IP or host name of your Config server
+
+[Eureka-Server]
+#IP or host name of your Eureka server
